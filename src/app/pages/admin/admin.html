@@ -1,0 +1,84 @@
+<div class="max-w-7xl mx-auto space-y-8">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-3xl font-display font-bold text-slate-800">Panel de Administración</h2>
+      <p class="text-slate-500 mt-1">Control total de capital y remesas de todos los usuarios.</p>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="flex justify-center p-12">
+      <mat-icon class="animate-spin text-indigo-600">autorenew</mat-icon>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <mat-icon>account_balance</mat-icon>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800">Capital Total</h3>
+        </div>
+        <div class="space-y-4">
+          @for (cap of getTotalCapital(); track cap[0]) {
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500 font-medium">{{ cap[0] }}</span>
+              <span class="text-2xl font-display font-bold text-slate-800">{{ cap[1] | number:'1.2-2' }}</span>
+            </div>
+          }
+          @if (getTotalCapital().length === 0) {
+            <p class="text-slate-400">Sin capital registrado.</p>
+          }
+        </div>
+      </div>
+
+      <div class="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <mat-icon>send</mat-icon>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800">Total Remesas Procesadas</h3>
+        </div>
+        <div class="text-4xl font-display font-bold text-slate-800">
+          {{ remittances().length }}
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+      <div class="p-8 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="text-xl font-display font-bold text-slate-800">Historial Global de Remesas</h3>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Fecha</th>
+              <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Remitente</th>
+              <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Agente</th>
+              <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Monto Enviado</th>
+              <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Monto Recibido</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (rem of remittances(); track rem.id) {
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="py-4 px-6 text-sm text-slate-500">{{ rem.date | date:'short' }}</td>
+                <td class="py-4 px-6 text-sm font-medium text-slate-800">{{ rem.senderFirstName }} {{ rem.senderLastName }}</td>
+                <td class="py-4 px-6 text-sm text-slate-500">{{ rem.agentName }}</td>
+                <td class="py-4 px-6 text-sm font-medium text-slate-800">{{ rem.amountSent | number:'1.2-2' }} <span class="text-slate-400 text-xs">{{ rem.pairId.split('-')[0] }}</span></td>
+                <td class="py-4 px-6 text-sm font-medium text-emerald-600">{{ rem.amountReceived | number:'1.2-2' }} <span class="text-emerald-400 text-xs">{{ rem.pairId.split('-')[1] }}</span></td>
+              </tr>
+            }
+            @if (remittances().length === 0) {
+              <tr>
+                <td colspan="5" class="py-12 text-center text-slate-400">No hay remesas registradas en el sistema.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
