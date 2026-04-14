@@ -5,7 +5,8 @@
     "packageManager": "npm",
     "schematicCollections": [
       "angular-eslint"
-    ]
+    ],
+    "analytics": "54775f63-b14a-46a0-9d72-27f26ab2fb07"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -19,6 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "baseHref": "/Rmesas/",
             "define": {
               "GEMINI_API_KEY": "'YOUR_GEMINI_API_KEY'"
             },
